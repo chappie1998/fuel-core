@@ -30,13 +30,13 @@ apt install -y cmake pkg-config libssl-dev git gcc build-essential git clang lib
 ```
 
 ###### Arch
-```bash 
+```bash
 pacman -Syu --needed --noconfirm cmake gcc openssl-1.0 pkgconf git clang llvm11 llvm11-libs postgresql-libs
 export OPENSSL_LIB_DIR="/usr/lib/openssl-1.0";
 export OPENSSL_INCLUDE_DIR="/usr/include/openssl-1.0"
 ```
 
-## Building 
+## Building
 
 We recommend using `xtask` to build fuel-core:
 

@@ -31,6 +31,7 @@ env_logger = "0.9"
 fuel-asm = { version = "0.3", features = ["serde-types"] }
 fuel-core-interfaces = { path = "../fuel-core-interfaces", version = "0.5.0" }
 fuel-crypto = { version = "0.3" }
+fuel-debugger = { path = "../../fuel-debugger", optional = true }
 fuel-merkle = "0.1"
 fuel-storage = { version = "0.1" }
 fuel-tx = { version = "0.7", features = ["serde-types"] }
@@ -69,5 +70,6 @@ fuel-vm = { version = "0.6", features = ["serde-types", "random", "test-helpers"
 insta = "1.8"
 
 [features]
-default = ["rocksdb"]
+default = ["rocksdb", "debug"]
+debug = ["fuel-vm/debug", "fuel-debugger"]
 test-helpers = []
