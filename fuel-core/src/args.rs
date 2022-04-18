@@ -21,10 +21,6 @@ pub struct Opt {
     #[clap(long = "port", default_value = "4000")]
     pub port: u16,
 
-    /// Export GraphQL schema to a file
-    #[clap(long = "dump-schema", parse(from_os_str))]
-    pub dump_schema: Option<PathBuf>,
-
     #[clap(
         name = "DB_PATH",
         long = "db-path",
@@ -84,7 +80,6 @@ impl Opt {
         let Opt {
             ip,
             port,
-            dump_schema,
             database_path,
             database_type,
             chain_config,
@@ -96,7 +91,6 @@ impl Opt {
 
         Ok(Config {
             addr,
-            dump_schema,
             database_path,
             database_type,
             chain_conf: chain_config.as_str().parse()?,
