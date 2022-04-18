@@ -28,6 +28,10 @@ pub struct Opt {
     #[clap(long)]
     pub debugger_addr: Option<net::SocketAddr>,
 
+    /// Export GraphQL schema to a file
+    #[clap(long = "dump-schema", parse(from_os_str))]
+    pub dump_schema: Option<PathBuf>,
+
     #[clap(
         name = "DB_PATH",
         long = "db-path",
@@ -89,6 +93,7 @@ impl Opt {
             port,
             #[cfg(feature = "debug")]
             debugger_addr,
+            dump_schema,
             database_path,
             database_type,
             chain_config,
@@ -102,6 +107,7 @@ impl Opt {
             addr,
             #[cfg(feature = "debug")]
             debugger_addr,
+            dump_schema,
             database_path,
             database_type,
             chain_conf: chain_config.as_str().parse()?,
