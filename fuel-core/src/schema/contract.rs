@@ -1,8 +1,9 @@
 use crate::database::{Database, KvStoreError};
 use crate::schema::scalars::ContractId;
+use crate::schema::scalars::Salt;
 use crate::schema::scalars::HexString;
 use async_graphql::{Context, Object};
-use fuel_storage::Storage;
+use fuel_storage::{Storage};
 use fuel_vm::prelude::Contract as FuelVmContract;
 
 pub struct Contract(pub(crate) fuel_types::ContractId);
@@ -26,6 +27,30 @@ impl Contract {
             .into_owned();
         Ok(HexString(contract.into()))
     }
+
+    async fn salt(&self, ctx: &Context<'_>) -> async_graphql::Result<Salt> {
+        let contract_id = self.0;
+
+        let db = ctx.data_unchecked::<Database>().clone();
+        let salt = fuel_vm::storage::InterpreterStorage::storage_contract_root(&db, &contract_id).unwrap().expect("Contract Didn't exist");
+
+        let cleaned_salt:Salt = salt.clone().0.into();
+
+        Ok(cleaned_salt)
+    }
+
+        /*
+        async fn balances(&self, ctx: &Context<'_>, balances: Vec<Bytes32>) -> u64 {
+            let contract_id: ContractId = self.0.into(); // Would calling id be more correct?
+
+            let db = ctx.data_unchecked::<Database>().clone();
+
+            for balance in balances {
+                let result = MerkleStorage::<ContractId, Bytes32, Bytes32>::get(&db, &contract_id, &balance);
+            }
+            1
+        }
+        */
 }
 
 #[derive(Default)]
