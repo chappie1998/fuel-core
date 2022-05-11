@@ -32,7 +32,7 @@ impl Contract {
         let contract_id = self.0;
 
         let db = ctx.data_unchecked::<Database>().clone();
-        let salt = fuel_vm::storage::InterpreterStorage::storage_contract_root(&db, &contract_id).unwrap().expect("Contract Didn't exist");
+        let salt = fuel_vm::storage::InterpreterStorage::storage_contract_root(&db, &contract_id).unwrap().expect("Contract does not exist");
 
         let cleaned_salt:Salt = salt.clone().0.into();
 
