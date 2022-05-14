@@ -1,11 +1,7 @@
 use crate::database::{Database, KvStoreError};
-use crate::schema::scalars::Bytes32 as FuelBytes;
-use crate::schema::scalars::ContractId;
-use crate::schema::scalars::HexString;
-use crate::schema::scalars::Salt;
+use crate::schema::scalars::{AssetId, ContractId, HexString, Salt};
 use async_graphql::{Context, Object};
-use fuel_storage::{MerkleStorage, Storage};
-use fuel_types::{AssetId, ContractId as FuelContractId};
+use fuel_storage::Storage;
 use fuel_vm::prelude::Contract as FuelVmContract;
 
 pub struct Contract(pub(crate) fuel_types::ContractId);
@@ -43,12 +39,12 @@ impl Contract {
         Ok(cleaned_salt)
     }
 
-    async fn balances(&self, ctx: &Context<'_>) -> async_graphql::Result<u64> {
+    async fn balances(&self, ctx: &Context<'_>, asset: AssetId) -> async_graphql::Result<u64> {
         let contract_id = self.0;
 
         let db = ctx.data_unchecked::<Database>().clone();
 
-        let asset_id = fuel_types::AssetId::new([0; 32]);
+        let asset_id: fuel_types::AssetId = asset.into();
 
         let balance = fuel_vm::storage::InterpreterStorage::merkle_contract_asset_id_balance(
             &db,

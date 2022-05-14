@@ -22,6 +22,7 @@ pub struct Contract {
     pub id: ContractId,
     pub salt: Salt,
     pub bytecode: HexString,
+    pub balances: u64,
 }
 
 #[derive(cynic::QueryFragment, Debug)]

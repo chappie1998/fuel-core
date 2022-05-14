@@ -63,6 +63,8 @@ async fn contract_salt() {
     let unwrapped_return = returned_contract.unwrap();
 
     let salt = unwrapped_return.salt;
+
+    // TODO make assertions here to verify Salt if possible?
 }
 
 #[tokio::test]
@@ -87,5 +89,10 @@ async fn contract_balances() {
 
     let unwrapped_return = returned_contract.unwrap();
 
+    let query_asset = fuel_types::AssetId::new([0; 32]); // Should be ETH?
+
+    let balance = unwrapped_return.balances(query_asset).await;
+
+    assert_eq!(balance, 0);
     // Something like unwrapped_return.balances() ?
 }
