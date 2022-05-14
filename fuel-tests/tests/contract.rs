@@ -39,5 +39,5 @@ async fn contract() {
     assert_eq!(start_id, returned_id);
 
     // Test Salt property of contracts
-    let salt = unwrapped_return.salt
+    let salt = unwrapped_return.salt;
 }
