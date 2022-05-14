@@ -132,7 +132,7 @@ type Contract {
 	id: ContractId!
 	bytecode: HexString!
 	salt: Salt!
-	balances: Int!
+	balances(asset: AssetId!): U64!
 }
 type ContractCreated {
 	contract: Contract!

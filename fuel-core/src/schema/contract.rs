@@ -1,5 +1,5 @@
 use crate::database::{Database, KvStoreError};
-use crate::schema::scalars::{AssetId, ContractId, HexString, Salt};
+use crate::schema::scalars::{AssetId, ContractId, HexString, Salt, U64};
 use async_graphql::{Context, Object};
 use fuel_storage::Storage;
 use fuel_vm::prelude::Contract as FuelVmContract;
@@ -39,7 +39,7 @@ impl Contract {
         Ok(cleaned_salt)
     }
 
-    async fn balances(&self, ctx: &Context<'_>, asset: AssetId) -> async_graphql::Result<u64> {
+    async fn balances(&self, ctx: &Context<'_>, asset: AssetId) -> async_graphql::Result<U64> {
         let contract_id = self.0;
 
         let db = ctx.data_unchecked::<Database>().clone();
@@ -54,7 +54,9 @@ impl Contract {
         .unwrap()
         .expect("Contract does not exist");
 
-        Ok(balance)
+        let final_balance: U64 = balance.into();
+
+        Ok(final_balance)
     }
 }
 

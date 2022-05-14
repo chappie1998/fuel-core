@@ -1,8 +1,12 @@
-use crate::client::schema::{schema, ContractId, HexString, Salt};
-
+use crate::client::schema::{schema, AssetId, ContractId, HexString, Salt, U64};
 #[derive(cynic::FragmentArguments, Debug)]
 pub struct ContractByIdArgs {
     pub id: ContractId,
+}
+
+#[derive(cynic::FragmentArguments, Debug)]
+pub struct ContractBalancesArgs {
+    pub id: AssetId,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -17,12 +21,17 @@ pub struct ContractByIdQuery {
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema_path = "./assets/schema.sdl")]
+#[cynic(
+    schema_path = "./assets/schema.sdl",
+    graphql_type = "Contract",
+    argument_struct = "ContractBalancesArgs"
+)]
 pub struct Contract {
     pub id: ContractId,
     pub salt: Salt,
     pub bytecode: HexString,
-    pub balances: u64,
+    #[arguments(asset = &args.id)]
+    pub balances: U64,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
