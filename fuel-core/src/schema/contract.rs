@@ -5,7 +5,7 @@ use crate::schema::scalars::HexString;
 use crate::schema::scalars::Salt;
 use async_graphql::{Context, Object};
 use fuel_storage::{MerkleStorage, Storage};
-use fuel_types::{Bytes32, ContractId as FuelContractId};
+use fuel_types::{AssetId, ContractId as FuelContractId};
 use fuel_vm::prelude::Contract as FuelVmContract;
 
 pub struct Contract(pub(crate) fuel_types::ContractId);
@@ -43,19 +43,22 @@ impl Contract {
         Ok(cleaned_salt)
     }
 
-    async fn balances(&self, ctx: &Context<'_>) -> async_graphql::Result<FuelBytes> {
-        let contract_id: FuelContractId = self.0.into(); // Would calling id be more correct?
+    async fn balances(&self, ctx: &Context<'_>) -> async_graphql::Result<u64> {
+        let contract_id = self.0;
 
         let db = ctx.data_unchecked::<Database>().clone();
 
-        let balance = Bytes32::new([4; 32]);
+        let asset_id = fuel_types::AssetId::new([0; 32]);
 
-        let result =
-            MerkleStorage::<FuelContractId, Bytes32, Bytes32>::get(&db, &contract_id, &balance)
-                .unwrap()
-                .unwrap();
+        let balance = fuel_vm::storage::InterpreterStorage::merkle_contract_asset_id_balance(
+            &db,
+            &contract_id,
+            &asset_id,
+        )
+        .unwrap()
+        .expect("Contract does not exist");
 
-        Ok((*result).into())
+        Ok(balance)
     }
 }
 
